@@ -55,22 +55,22 @@ async function run() {
             res.send(result)
         })
         app.get('/get-craft/:id', async (req, res)=>{
-            console.log(req.params.id)
-            const query = {_id: new ObjectId()}
+            const query = {_id: new ObjectId(req.params.id)}
             const craft = await crafts.findOne(query)
+            //console.log(craft)
             res.send(craft)
 
         })
         app.post('/add-craft', async (req, res)=>{
             const result = await crafts.insertOne(req.body)
-            console.log(req, result)
             res.send(result)
         })
-        app.put('/update-phone/:slug',async (req, res)=>{
-            console.log('Params ',req.params.slug)
-            const filter = {slug:req.params.slug}
+        app.put('/update-craft/:id',async (req, res)=>{
+            
+            const filter = {_id: new ObjectId(req.params.id)}
             const phone = {
                 $set:{
+                    //change all property values 
                     phone_name:req.body.phone_name,
                     brand: req.body.brand,
                     image:req.body.image
@@ -80,7 +80,7 @@ async function run() {
             res.send(result)
 
         })
-        app.delete('/delete-phone/:slug',async (req, res)=>{ 
+        app.delete('/delete-craft/:slug',async (req, res)=>{ 
             const query = { slug: req.params.slug };
             const result = await crafts.deleteOne(query);
             if (result.deletedCount === 1) {

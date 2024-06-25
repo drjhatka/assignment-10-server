@@ -59,10 +59,12 @@ async function run() {
             const craft = await crafts.findOne(query)
             res.send(craft)
         })
-        app.get('/view-addlist',async(req, res)=>{
+        app.post('/view-addlist',async(req, res)=>{
+            //console.log(req)
             const query  = { user_email: req.body.user_email };
-            const cursor = await crafts.find(query)
+            const cursor = crafts.find(query)
             const result = await cursor.toArray()
+            //console.log('Result ',result)
             res.send(result)
         })
         app.post('/add-craft', async (req, res)=>{

@@ -64,7 +64,6 @@ async function run() {
             const query  = { user_email: req.body.user_email };
             const cursor = crafts.find(query)
             const result = await cursor.toArray()
-            //console.log('Result ',result)
             res.send(result)
         })
         app.post('/add-craft', async (req, res)=>{
@@ -77,7 +76,7 @@ async function run() {
             const phone = {
                 $set:{
                     //change all property values 
-                    phone_name:req.body.phone_name,
+                    image_url:req.body.phone_name,
                     brand: req.body.brand,
                     image:req.body.image
                 }

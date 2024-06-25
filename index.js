@@ -42,12 +42,17 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-        const database = client.db("craftsdb");
-        const crafts = await database.collection("crafts");
-       // const query = {_id: new ObjectId()}
+        const database          = client.db("craftsdb");
+        const crafts            = await database.collection("crafts");
+        const subcategories     = await database.collection('subcategories')
+       
         // Connect the client to the server	(optional starting in v4.7)
+        //comment this when deploying to production
         await client.connect();
         
+        app.get('/get-subcategories',(req, res)=>{
+
+        })
         app.get('/get-all', async (req, res)=>{
             const cursor =  crafts.find({});
             const result = await cursor.toArray()
@@ -72,13 +77,13 @@ async function run() {
         })
         app.put('/update-craft/:id',async (req, res)=>{
             const filter = {_id: new ObjectId(req.params.id)}
-            const phone = {
+            const craft = {
                 $set:{
                     //change all property values 
                     image_url           : req.body.image_url,
                     item_name           : req.body.item_name,
                     subcategory         : req.body.subcategory,
-                    short_description:  : req.body.short_description,
+                    short_description   : req.body.short_description,
                     price               : req.body.price,
                     rating              : req.body.rating,
                     processing_time     : req.body.processing_time,
@@ -86,10 +91,10 @@ async function run() {
                     user_email          : req.body.user_email
                 }
             }
-            const result = await crafts.updateOne(filter,phone,{upsert:true})
+            const result = await crafts.updateOne(filter,craft,{upsert:true})
             res.send(result)
         })
-        app.delete('/delete-craft/:slug',async (req, res)=>{ 
+        app.delete('/delete-craft/:id',async (req, res)=>{ 
             const query = { slug: req.params.slug };
             const result = await crafts.deleteOne(query);
             if (result.deletedCount === 1) {
@@ -97,6 +102,7 @@ async function run() {
               } else {
                 console.log("No documents matched the query. Deleted 0 documents.");
               }
+            res.send(result)
         })
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });

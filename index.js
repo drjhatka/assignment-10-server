@@ -57,9 +57,13 @@ async function run() {
         app.get('/get-craft/:id', async (req, res)=>{
             const query = {_id: new ObjectId(req.params.id)}
             const craft = await crafts.findOne(query)
-            //console.log(craft)
             res.send(craft)
-
+        })
+        app.get('/view-addlist',async(req, res)=>{
+            const query  = { user_email: req.body.user_email };
+            const cursor = await crafts.find(query)
+            const result = await cursor.toArray()
+            res.send(result)
         })
         app.post('/add-craft', async (req, res)=>{
             const result = await crafts.insertOne(req.body)

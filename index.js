@@ -71,19 +71,23 @@ async function run() {
             res.send(result)
         })
         app.put('/update-craft/:id',async (req, res)=>{
-            
             const filter = {_id: new ObjectId(req.params.id)}
             const phone = {
                 $set:{
                     //change all property values 
-                    image_url:req.body.phone_name,
-                    brand: req.body.brand,
-                    image:req.body.image
+                    image_url           : req.body.image_url,
+                    item_name           : req.body.item_name,
+                    subcategory         : req.body.subcategory,
+                    short_description:  : req.body.short_description,
+                    price               : req.body.price,
+                    rating              : req.body.rating,
+                    processing_time     : req.body.processing_time,
+                    user_name           : req.body.user_name,
+                    user_email          : req.body.user_email
                 }
             }
             const result = await crafts.updateOne(filter,phone,{upsert:true})
             res.send(result)
-
         })
         app.delete('/delete-craft/:slug',async (req, res)=>{ 
             const query = { slug: req.params.slug };

@@ -48,7 +48,7 @@ async function run() {
        
         // Connect the client to the server	(optional starting in v4.7)
         //comment this when deploying to production
-        await client.connect();
+        //await client.connect();
         app.post('/get-craft-by-category/:category',async(req, res)=>{
             const query  = { subcategory: req.params.category };
             const cursor = crafts.find(query)
@@ -121,15 +121,15 @@ async function run() {
             const query = { _id: new ObjectId(req.params.id) };
             const result = await crafts.deleteOne(query);
             if (result.deletedCount === 1) {
-                console.log("Successfully deleted one document.");
+                //console.log("Successfully deleted one document.");
               } else {
-                console.log("No documents matched the query. Deleted 0 documents.");
+                //console.log("No documents matched the query. Deleted 0 documents.");
               }
             res.send(result)
         })
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+        //await client.db("admin").command({ ping: 1 });
+        //console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } 
     finally {
         // Ensures that the client will close when you finish/error

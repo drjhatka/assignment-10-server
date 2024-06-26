@@ -44,19 +44,31 @@ async function run() {
     try {
         const database          = client.db("craftsdb");
         const crafts            = await database.collection("crafts");
-        const subcategories     = await database.collection('subcategories')
+        const categories     = await database.collection('categories')
        
         // Connect the client to the server	(optional starting in v4.7)
         //comment this when deploying to production
         await client.connect();
-        
-        app.get('/get-subcategories',(req, res)=>{
-
+        app.post('/get-craft-by-category/:category',async(req, res)=>{
+            const query  = { subcategory: req.params.category };
+            const cursor = crafts.find(query)
+            const result = await cursor.toArray()
+            console.log(req.params)
+            res.send(result)
         })
+
+        app.get('/get-categories',async (req, res)=>{
+            const cursor =  await categories.find({});
+            const result = await cursor.toArray()
+            console.log(result)
+            res.send(result)
+        })
+
+
         app.get('/get-all', async (req, res)=>{
             const cursor =  crafts.find({});
             const result = await cursor.toArray()
-            console.log(result)
+            //console.log(result)
             res.send(result)
         })
         app.get('/get-craft/:id', async (req, res)=>{
@@ -71,11 +83,20 @@ async function run() {
             const result = await cursor.toArray()
             res.send(result)
         })
+        app.post('/view-filterlist',async(req, res)=>{
+            //console.log(req)
+                    console.log(req)
+            const query  = { customization: req.body.customization, user_email: req.body.user_email };
+            const cursor = crafts.find(query)
+            const result = await cursor.toArray()
+            res.send(result)
+        })
         app.post('/add-craft', async (req, res)=>{
             const result = await crafts.insertOne(req.body)
             res.send(result)
         })
         app.put('/update-craft/:id',async (req, res)=>{
+            console.log(req.params.id)
             const filter = {_id: new ObjectId(req.params.id)}
             const craft = {
                 $set:{
@@ -87,6 +108,8 @@ async function run() {
                     price               : req.body.price,
                     rating              : req.body.rating,
                     processing_time     : req.body.processing_time,
+                    customization       : req.body.customization,
+                    in_stock            : req.body.in_stock,
                     user_name           : req.body.user_name,
                     user_email          : req.body.user_email
                 }
@@ -95,7 +118,7 @@ async function run() {
             res.send(result)
         })
         app.delete('/delete-craft/:id',async (req, res)=>{ 
-            const query = { slug: req.params.slug };
+            const query = { _id: new ObjectId(req.params.id) };
             const result = await crafts.deleteOne(query);
             if (result.deletedCount === 1) {
                 console.log("Successfully deleted one document.");

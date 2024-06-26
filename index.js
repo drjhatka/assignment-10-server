@@ -1,4 +1,5 @@
 const express = require('express')
+const app = express()
 const cors = require('cors')
 const helmet = require('helmet')
 require('dotenv').config()
@@ -8,12 +9,16 @@ const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}
 
 //const ObjectId = require('mongodb').ObjectId;
 
-const app = express()
 const port = process.env.PORT || 5000
 
 
+app.use(cors({
+    // origin: 'https://assignment-10-client-6d815.web.app/',
+    // optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
+    origin:true,
+    credentials: true
+  }))             //...cors middleware
 app.use(express.json())     //...get request body
-app.use(cors())             //...cors middleware
 
 // Use Helmet! to disable cors policy upon deployment
 //app.use(helmet());
@@ -30,6 +35,12 @@ app.use(
       },
     })
   );
+  
+  app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 //Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {

@@ -53,14 +53,14 @@ async function run() {
             const query  = { subcategory: req.params.category };
             const cursor = crafts.find(query)
             const result = await cursor.toArray()
-            console.log(req.params)
+            //console.log(req.params)
             res.send(result)
         })
 
         app.get('/get-categories',async (req, res)=>{
             const cursor =  await categories.find({});
             const result = await cursor.toArray()
-            console.log(result)
+            //console.log(result)
             res.send(result)
         })
 
@@ -85,7 +85,6 @@ async function run() {
         })
         app.post('/view-filterlist',async(req, res)=>{
             //console.log(req)
-                    console.log(req)
             const query  = { customization: req.body.customization, user_email: req.body.user_email };
             const cursor = crafts.find(query)
             const result = await cursor.toArray()
